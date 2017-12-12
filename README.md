@@ -1,7 +1,7 @@
 # townQuest
 A text based adventure game
 
-Though no code was copy-pasted, the ideas and means are from https://inventwithpython.com/blog/2014/12/11/making-a-text-adventure-game-with-the-cmd-and-textwrap-python-modules/.
+Though no code was copy-pasted, the ideas and means are from https://inventwithpython.com/blog/2014/12/11/making-a-text-adventure-game-with-the-cmd-and-textwrap-python-modules/. Extensions on this base idea include: different rooms and items, the item type food, the addition of people (dialog/descriptions/etc.), idea of health and sleep, time, money, ...
 
 To Do:
 0. Read/write state of game for saving progress
