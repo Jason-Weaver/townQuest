@@ -2,13 +2,6 @@
 import sys, cmd, os
 from enum import Enum
 
-# Implement
-# 1. Buying per Person
-# 2. The ability to have things cost other things
-# 3. Change The Theif Guild to 
-# 4. Have Room Hours kick people out
-# 5. Put this on a Git Hub
-
 # Constant Variable Keys used to quicken debugging ######################################
 # Room keys
 DESC 	= 'description'
@@ -85,13 +78,19 @@ townRooms = {
     'The Blacksmith': {
         DESC: 'The room is dim and sooty. A roaring furnace in the back corner eluminates the scaps of matal that litter the ground.',
         GROUND: ['long sword'],
-	PEOPLE: ['The Blacksmith'],
+		PEOPLE: ['The Blacksmith'],
         NORTH: 'The Town Square',
         EAST: 'South Y Street'
     },
+    'The Clothier': {
+        DESC: 'Vats and stretched cloth are spread out around the low, wide room. The dye fumes it your face before your eyes have time to adjust to the low light.',
+		GROUND: [],
+		PEOPLE: ['The Clothier'],
+        SOUTH: 'West X Street',
+    },
     'The Deep Forest Wilds': {
         DESC: 'The trees here seem older and larger. Night and day have no meaning. North and South are the same. It\'s impossible to know if the sounds of nature are within or around. The feeling of connectedness, akin to the feeling of alonesness, is just enough.',
-	GROUND: [],
+		GROUND: [],
         NORTH: 'The Deep Forest Wilds',
         SOUTH: 'The Deep Forest Wilds',
         WEST: 'The Deep Forest Wilds',
@@ -99,14 +98,14 @@ townRooms = {
     },
     'East X Street': {
         DESC: 'This is a decent part of town, but the shadow of The Wizard\'s Tower is everpresent.',
-	GROUND: [],
+		GROUND: [],
         NORTH: 'The Tavern',
         SOUTH: 'The Wizard\'s Tower',
         WEST: 'The Town Square'
     },
     'The Forest Wilds': {
         DESC: '',
-	GROUND: [],
+		GROUND: [],
         NORTH: 'The Deep Forest Wilds',
         SOUTH: 'North Y Street',
         WEST: 'The Deep Forest Wilds',
@@ -115,44 +114,38 @@ townRooms = {
     'North Y Street': {
         DESC: 'The north end of Y Street has really gone down hill. A family of rat-like creatures nibble on some scraps thrown out of the tavern.',
         GROUND: ['Do Not Take Sign Sign'],
-	NORTH: 'The Forest Wilds',
+		NORTH: 'The Forest Wilds',
         SOUTH: 'The Town Square',
-        WEST: 'The Thief Guild'
+		EAST: 'The Tavern'
     },
     'South Y Street': {
         DESC: '',
-	GROUND: [],
+		GROUND: [],
         NORTH: 'The Town Square',
         WEST: 'The Blacksmith'
     },
     'The Tavern': {
-	DESC: 'The room is dim but it\'s build suggests that it makes at least some income. The delightful smell of meat pies fills the air.',
+		DESC: 'The room is dim but it\'s build suggests that it makes at least some income. The delightful smell of meat pies fills the air.',
         GROUND: ['Shopping HOWTO'],
-	ROOMHOURS: (12, 24),
-	SHOPHOURS: (12, 24),
-	PEOPLE: ['The Bartender', 'Sam Rouk'],
+		ROOMHOURS: (12, 24),
+		SHOPHOURS: (12, 24),
+		PEOPLE: ['The Bartender', 'Sam Rouk'],
         SOUTH: 'East X Street',
         SELL: {
-		'Brew': {
-			PRICE: 2,
-			ITEMSINSTOCK: 999
-		}, 'Mead': {
-			PRICE: 2,
-			ITEMSINSTOCK: 24
-		}, 'Meat Pie': {
-			PRICE: 3,
-			ITEMSINSTOCK: 999
-		}, 'Spiced Potatoes': {
-			PRICE: 3,
-			ITEMSINSTOCK: 6
-		}
-	},
-    },
-    'The Thief Guild': {
-        DESC: 'This is a Theif Guild.  I really hate this idea, but I can\'t think of a better thing to put here.',
-	GROUND: [],
-        SOUTH: 'West X Street',
-        EAST: 'North Y Street'
+			'Brew': {
+				PRICE: 2,
+				ITEMSINSTOCK: 999
+			}, 'Mead': {
+				PRICE: 2,
+				ITEMSINSTOCK: 24
+			}, 'Meat Pie': {
+				PRICE: 3,
+				ITEMSINSTOCK: 999
+			}, 'Spiced Potatoes': {
+				PRICE: 3,
+				ITEMSINSTOCK: 6
+			}
+		},
     },
     'The Town Square': {
         DESC: 'The town square is a large open space with a fountain in the center. Streets lead in all directions.',
@@ -164,32 +157,32 @@ townRooms = {
     },
     'The Upper Wizard\'s Tower': {
         DESC: '',
-	GROUND: [],
+		GROUND: [],
         NORTH: 'The Wizard\'s Tower Deck',
         DOWN: 'The Wizard\'s Tower Staircase'
     },
     'The Wizard\'s Tower': {
         DESC: '',
-	GROUND: [],
+		GROUND: [],
         NORTH: 'East X Street',
         UP: 'The Wizard\'s Tower Staircase'
     },
     'The Wizard\'s Tower Deck': {
         DESC: 'From this deck you can see the whole town. It seems so small from up here.  You feel so small from up here.',
-	GROUND: [],
+		GROUND: [],
         SOUTH: 'The Wizard\'s Tower Deck',
         UP: 'The Wizard\'s Tower Deck'
     },
     'The Wizard\'s Tower Staircase': {
         DESC: 'The shoulder-width staircase has thin film and damp smell. Except for the occasional archery slit, the darkness is loud and thick.',
-	GROUND: [],
+		GROUND: [],
         UP: 'The Upper Wizard\'s Tower',
         DOWN: 'The Wizard\'s Tower'
     },
     'West X Street': {
         DESC: 'West X Street Description.',
-	GROUND: [],
-        NORTH: 'The Thief Guild',
+		GROUND: [],
+        NORTH: 'The Clothier',
         SOUTH: 'The Blacksmith',
         WEST: 'Ye Old Inn',
         EAST: 'The Town Square'
@@ -198,32 +191,32 @@ townRooms = {
         DESC: 'A quaint room. The light from the arched window illuminates what it does have, hand-craftmanship of finest woods.',
         GROUND: ['Bed', 'trunk'],
         SOUTH: 'Ye Old Inn Second Floor',
-	ITEMSNEEDEDTOENTER: ['inn key']
+		ITEMSNEEDEDTOENTER: ['inn key']
     },
     'Ye Old Inn Second Floor': {
         DESC: 'The stairs let out in to a hallway with a window on the other side.  Old family photos line the walls.',
-	GROUND: [],
-	NORTH: 'Ye Old Inn North Room',
-	SOUTH: 'Ye Old Inn South Room',
+		GROUND: [],
+		NORTH: 'Ye Old Inn North Room',
+		SOUTH: 'Ye Old Inn South Room',
         DOWN: 'Ye Old Inn'
     },
     'Ye Old Inn South Room': {
         DESC: 'A room erily similar to the one across the hall',
-	GROUND: [],
+		GROUND: [],
         NORTH: 'Ye Old Inn Second Floor',
-	ROOMISENTERABLE: False
+		ROOMISENTERABLE: False
     },
     'Ye Old Inn': {
         DESC: 'The first floor is a cheerful, wide open room. The kitchen\'s in the back, and there\'s a warming fire by the staircase.',
-	GROUND: [],
+		GROUND: [],
         SELL: {
-		'inn key': {
-			PRICE: 8,
-			ITEMSINSTOCK: 1
-		}
-	},
-	SHOPHOURS: (6, 20),
-	PEOPLE: ['The Inn Keeper', 'The Knitting Woman'],
+			'inn key': {
+				PRICE: 8,
+				ITEMSINSTOCK: 1
+			}
+		},
+		SHOPHOURS: (6, 20),
+		PEOPLE: ['The Inn Keeper', 'The Knitting Woman'],
         EAST: 'West X Street',
         UP: 'Ye Old Inn Second Floor'
     }
@@ -289,7 +282,7 @@ townItems = {
 	'inn key': {
 		GROUNDDESC: 'a heavy iron key covered in rust',
 		SHORTDESC: 'an inn key',
-		LONGDESC: 'The key is old but refined as if it guards something important',
+		LONGDESC: 'The key is old but refined as if it guards something important.',
 		TAKEABLE: True,
 		DESCWORDS: ['inn key', 'key']
 	},
@@ -299,11 +292,11 @@ townItems = {
 		LONGDESC: colors.BOLD + """
                      Forest Wilds               
                                                 
-	     +--------+      +---------+        
-	     | Theif  0      | Tavern  |        
-	     |  Guild |      |         |        
-     +------++------0-+      +----0----+        
-     |Ye Old|                                   
+  	      +--------+      +---------+        N
+	      |Clothier|      | Tavern  |        |
+ 	      |        |      0         |     W-- --E
+      +------++------0-+      +----0----+        |
+      |Ye Old|                                   S
      | Inn  |        Town Square    +-------+   
      |      0                       | Deck  |   
      +------+------0----+   +---0-----/  /      
@@ -345,13 +338,13 @@ townItems = {
 
 "Note that everything you do takes time. Actions like moving around town may quickly pass you from morn to eve while actions like looking at a sign may pass the time much slower.
 
-“Also note that you have health.  You loose sleep for every day just for living. You can regain health by sleeping, eating, and drinking.
+“Also note that you have health.  You loose health for every day just for living. You can regain health by sleeping, eating, and drinking.
 
 “You can buy things in different places around town. Whereas typing ”look” will show you the items around, type “list” to see if the place your in has anything to buy.
 
 “Items and people in this town can be addressed by multiple names. For instance, you can read this note by typing both ‘look readme’ and ‘look note.'
 
-“Actions and items can be autocompleted by pressing tab. If you try to complete something like “take sig”, and it doesn’t complete, chances are you can’t do that action with that item.
+“Actions and items can be autocompleted by pressing tab. If you try to complete something like “take sign”, and it doesn’t complete, chances are you can’t do that action with that item.
 
 “The map is small, but there is plenty to explore. When in doubt, type ‘help'." """ + colors.ENDC,
 		TAKEABLE: True,
@@ -384,7 +377,7 @@ townItems = {
 	'Welcome Sign': {
         	GROUNDDESC: 'A welcome sign stands here.',
         	SHORTDESC: 'a welcome sign',
-        	LONGDESC: 'The welcome sign reads,' + colors.BOLD + '"Welcome to town! Adventurers and travelers welcome. Type "help" to see all the things our town has to offer.' + colors.ENDC,
+        	LONGDESC: 'The welcome sign reads,' + colors.BOLD + '"Welcome to town! Adventurers and travelers welcome. Type "help" to see all the things our town has to offer. Type "look README" for more information.' + colors.ENDC,
         	TAKEABLE: False,
         	DESCWORDS: ['welcome sign', 'sign']
         }
@@ -401,7 +394,7 @@ townPeople = {
 #		DESCWORDS: ['These are words', 'used to describe this', 'person']
 #		},
 	'The Bartender': {
-		GROUNDDESC: 'The bartender flashes a grin as he slides a box marked "Not Human Organs" under a table with his foot.',
+		GROUNDDESC: 'The bartender flashes a grin as he slides a box marked "Not Forest Wild Ceremonial Herbs" under a table with his foot.',
 		LONGDESC: 'The bartender has a kept appearance, but there\'s something more going on behind his eyes.',
 		DIALOG: [colors.BOLD + "Welcome! It\'s good to see a nice, spry traveller this time of year.", 
 			 "Try the mead if you\'re unsure of what to get. It\'s the inn keeper\' favorite.",
@@ -412,16 +405,22 @@ townPeople = {
 	},
 	'The Blacksmith': {
 		GROUNDDESC: 'A man has his back towards you. He\'s furiously hammering.',
-		LONGDESC: 'The blacksmith is a sturdy man with a broad smaile and an even broader forearms',
+		LONGDESC: 'The blacksmith is a sturdy man with a broad smile and an even broader forearms',
 		DIALOG: [colors.BOLD + "Welcome traveler.  I don't think I've seen you around here before.",
 			 "What?! You don't seem armed. That's not wise around these parts...",
 			 "the forest wilds have been more and more active since that wizard came to town.", "Here. I like you. Feel free to take one of my swords." + colors.ENDC], 
 		MAKEITEMSTAKEABLEAFTERDIALOG: ['long sword'],
 		DESCWORDS: ['blacksmith', 'man']
 	},
+	'The Clothier': {
+		GROUNDDESC: 'A women works furiously but skillfully over something. Her skin looks as weathered as the hides hanging on the walls.',
+		LONGDESC: 'The clothier seems hardy and ageless. Wait, is she your age? Surely not...',
+		DIALOG: ["She looks up and smirks at you kindly, but it's obvious she isn't interested in talking."],
+		DESCWORDS: ['clothier', 'woman']
+	},
 	'The Knitting Woman': {
 		GROUNDDESC: 'An old woman knits as she rocks in front of the fire.',
-		LONGDESC: 'The woman look similar to the inn keeper. She seems as much a part of the room as the fireplace the the large oak table.',
+		LONGDESC: 'The woman look similar to the inn keeper. She seems as much a part of the room as the fireplace or the the large oak table.',
 		DESCWORDS: ['knitting woman', 'woman']
 	},
 	'The Inn Keeper': {
@@ -498,7 +497,7 @@ def moveDirection(direction):
 	if ITEMSNEEDEDTOENTER in townRooms[townRooms[location][direction]].keys():
 		for item in townRooms[townRooms[location][direction]][ITEMSNEEDEDTOENTER]:
 			if item not in inventory:
-				print("You can't go into", townRooms[location][direction] + ". You don't have", townItems[item][SHORTDESC])
+				print("You can't go into", townRooms[location][direction] + ". You don't have", townItems[item][SHORTDESC] + ".")
 				return
 			else:
 				print(townItems[item][SHORTDESC], "got you into", townRooms[location][direction] + ".", end=" ")
@@ -526,9 +525,8 @@ def animateBoldTextPlaces(mapString):
 
 	if location == 'The Forest Wilds' or location == 'The Deep Forest Wilds':
 		mapString = mapString.replace("Forest Wilds", colors.FLASHING + "Forest Wilds" + colors.ENDC + colors.BOLD)
-	elif location == 'The Thief Guild':
-		mapString = mapString.replace("Theif", colors.FLASHING + "Theif" + colors.ENDC + colors.BOLD)
-		mapString = mapString.replace("Guild", colors.FLASHING + "Guild" + colors.ENDC + colors.BOLD)
+	elif location == 'The Clothier':
+		mapString = mapString.replace("Clothier", colors.FLASHING + "Clothier" + colors.ENDC + colors.BOLD)
 	elif location == 'The Tavern':
 		mapString = mapString.replace("Tavern", colors.FLASHING + "Tavern" + colors.ENDC + colors.BOLD)
 	elif location == "Ye Old Inn" or location == "Ye Old Inn Second Floor" or location == "Ye Old Inn South Room" or location == "Ye Old Inn North Room":
@@ -1325,7 +1323,7 @@ sleep <item> - Sleep on an item."""
 		return list(set(possibleItems))
 			
 
-	# Movement shortcuts
+	# Shortcuts
 	do_n = do_north
 	do_s = do_south
 	do_w = do_west 
@@ -1334,6 +1332,10 @@ sleep <item> - Sleep on an item."""
 	do_d = do_down
 	do_inv = do_inventory
 	do_q = do_quit
+	do_exit = do_quit
+	do_ls = do_look
+	complete_ls = complete_look
+
 	
 	def help_arrowUp(self):
 		print('Arrow up to see past commands.')
@@ -1358,7 +1360,8 @@ if __name__ == '__main__':
 	os.system('clear') 
 	print(getTitleString()) 
 	print()
-	print(colors.WARNING + colors.BOLD + '(Type "help" for commands.)' + colors.ENDC) 
+	print(colors.WARNING + colors.BOLD + '(Type "help" for commands.)' + colors.ENDC)
+	print(colors.WARNING + colors.BOLD + '(Type "look sign" for another place to start.)' + colors.ENDC)  
 	displayLocation(location) 
 	TextAdventureCmd().cmdloop() 
 	print('Thanks for playing!\n')
